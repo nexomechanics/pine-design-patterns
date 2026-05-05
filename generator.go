@@ -1,6 +1,7 @@
 package main
 
 import (
+	"slices"
 	"strings"
 )
 
@@ -91,6 +92,12 @@ plotshape(bearSignal, "Bear", shape.triangledown, location.abovebar, BEAR_COLOR,
 
 	"alerts": `alertcondition(bullSignal, "Bull Signal", "Bull signal detected")
 alertcondition(bearSignal, "Bear Signal", "Bear signal detected")`,
+
+	"alerts_strategy": `if bullSignal
+    alert("Bull signal detected", alert.freq_once_per_bar_close)
+
+if bearSignal
+    alert("Bear signal detected", alert.freq_once_per_bar_close)`,
 }
 
 var sectionCodeMinimal = map[string]string{
@@ -132,12 +139,7 @@ var sectionFooters = map[string]string{
 }
 
 func hasSection(sections []string, key string) bool {
-	for _, s := range sections {
-		if s == key {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(sections, key)
 }
 
 func generate(req GenerateRequest) string {
